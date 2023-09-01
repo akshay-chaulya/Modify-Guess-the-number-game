@@ -4,7 +4,7 @@ const textArea = document.getElementById("textarea");
 const checkBtn = document.getElementById("checkBtn");
 const text1 = document.querySelector(".t1");
 const score = document.getElementById("score");
-const highScore = document.getElementById("highScore");
+const highScoreElem = document.getElementById("highScore");
 const computerNumberBox = document.querySelector(".computerNumberBox")
 
 
@@ -14,11 +14,22 @@ againBtn.addEventListener("click", () => {
 })
 
 function againBtnLogic() {
-    location.reload()
+    rNum = Math.floor(Math.random() * 20);
+    computerNumberBox.textContent = "?";
+    textArea.textContent = "";
+    text1.textContent = "Start guessing...";
+    score.textContent = "20";
+    document.body.style.background = "rgba(0, 0, 0, 0.868)"
+    textArea.disabled = false
+    textArea.focus()
 }
 
 // rendom number logic && score
-const rNum = Math.floor(Math.random() * 20);
+let rNum = Math.floor(Math.random() * 20);
+
+// assingent variable
+let highScore = 0;
+
 
 // check logics
 checkBtn.addEventListener("click", () => {
@@ -27,7 +38,7 @@ checkBtn.addEventListener("click", () => {
 
 function checkBtnLogic() {
     let inputValue = textArea.value;
-    if (inputValue >= 0) {
+    if (inputValue >= 0 && inputValue != "") {
         score.innerHTML -= 1;
         if (inputValue > rNum) {
             text1.innerHTML = "📈 To Big"
@@ -39,7 +50,11 @@ function checkBtnLogic() {
             text1.innerHTML = "🔥 Match"
             computerNumberBox.innerHTML = rNum
             document.body.style.background = "rgba(0, 176, 0, 0.678)"
-            setHighScore(score.innerHTML)
+            textArea.disabled = true
+            if (score.textContent > highScore) {
+                highScore = score.textContent;
+                highScoreElem.textContent = highScore
+            }
         }
     }
     else {
@@ -49,15 +64,3 @@ function checkBtnLogic() {
     textArea.focus()
 }
 
-function setHighScore(score) {
-    const storeScore = localStorage.getItem("highScore");
-    if (score > storeScore) {
-        localStorage.setItem("highScore", `${score}`)
-    }
-}
-
-setInterval(() => {
-    highScore.innerHTML = localStorage.getItem("highScore")
-}, 50)
-
-// store high score in local storeg
