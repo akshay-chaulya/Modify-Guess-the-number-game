@@ -14,22 +14,37 @@ againBtn.addEventListener("click", () => {
 })
 
 function againBtnLogic() {
-    rNum = Math.floor(Math.random() * 20);
+    computerNumber()
     computerNumberBox.textContent = "?";
     textArea.textContent = "";
-    text1.textContent = "Start guessing...";
+    displayMessage('Start guessing...')
     score.textContent = "20";
-    document.body.style.background = "rgba(0, 0, 0, 0.868)"
-    textArea.disabled = false
+    backgroundAndTextArea(false, "rgba(0, 0, 0, 0.868)")
     textArea.focus()
 }
 
-// rendom number logic && score
-let rNum = Math.floor(Math.random() * 20);
+// display message in text1 function 
+function displayMessage(message) {
+    text1.textContent = message;
+}
+
+// background color set and text box logic
+function backgroundAndTextArea(Tf, color) {
+    textArea.disabled = Tf;
+    document.body.style.background = color;
+}
+
 
 // assingent variable
 let highScore = 0;
+let rNum;
 
+// rendom number logic && score
+function computerNumber() {
+    rNum = Math.floor(Math.random() * 20);
+    return rNum;
+}
+computerNumber()
 
 // check logics
 checkBtn.addEventListener("click", () => {
@@ -37,28 +52,31 @@ checkBtn.addEventListener("click", () => {
 })
 
 function checkBtnLogic() {
-    let inputValue = textArea.value;
-    if (inputValue >= 0 && inputValue != "") {
-        score.innerHTML -= 1;
-        if (inputValue > rNum) {
-            text1.innerHTML = "📈 To Big"
-        }
-        else if (inputValue < rNum) {
-            text1.innerHTML = "📉 To Small"
+    let inputValue = (textArea.value);
+    if (inputValue !== "") {
+        inputValue = Number(inputValue)
+        if (inputValue >= 0) {
+            score.innerHTML -= 1;
+
+            if (inputValue === rNum) {
+                displayMessage('🎉 Correct Number!')
+                computerNumberBox.innerHTML = rNum
+                backgroundAndTextArea(true, "rgba(0, 176, 0, 0.678)")
+                if (score.textContent > highScore) {
+                    highScore = score.textContent;
+                    highScoreElem.textContent = highScore
+                }
+            }
+            else {
+                displayMessage(inputValue > rNum ? '📈 To Big' : '📉 To Small')
+            }
         }
         else {
-            text1.innerHTML = "🔥 Match"
-            computerNumberBox.innerHTML = rNum
-            document.body.style.background = "rgba(0, 176, 0, 0.678)"
-            textArea.disabled = true
-            if (score.textContent > highScore) {
-                highScore = score.textContent;
-                highScoreElem.textContent = highScore
-            }
+            displayMessage('💀 Please Enter Valid Number!')
         }
     }
     else {
-        text1.innerHTML = "💀 Please Enter Valid Number!"
+        displayMessage('🚫 No number!')
     }
     textArea.value = ""
     textArea.focus()
